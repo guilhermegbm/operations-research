@@ -1,8 +1,10 @@
 package com.ufmg.operationsresearch.matrix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.InvalidParameterException;
 
@@ -101,5 +103,23 @@ public class CoordinateTest {
 		assertEquals(2, c12.getColumn());
 		assertEquals(1, c21.getColumn());
 		assertEquals(2, c22.getColumn());
+	}
+
+	@Test
+	public void testEqualCoordinates() {
+		assertTrue(this.c11.equals(this.c11));
+
+		assertTrue(this.c11.equals(new Coordinate(1, 1)));
+		assertTrue(this.c12.equals(new Coordinate(1, 2)));
+		assertTrue(this.c21.equals(new Coordinate(2, 1)));
+		assertTrue(this.c22.equals(new Coordinate(2, 2)));
+	}
+
+	@Test
+	public void testNotEqualCoordinates() {
+		assertFalse(this.c11.equals(null));
+		assertFalse(this.c11.equals(new Object()));
+		assertFalse(this.c11.equals(new Coordinate(1, 2)));
+		assertFalse(this.c11.equals(new Coordinate(2, 1)));
 	}
 }
