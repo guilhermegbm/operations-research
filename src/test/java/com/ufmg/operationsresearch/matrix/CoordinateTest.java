@@ -122,4 +122,39 @@ public class CoordinateTest {
 		assertFalse(this.c11.equals(new Coordinate(1, 2)));
 		assertFalse(this.c11.equals(new Coordinate(2, 1)));
 	}
+
+	@Test
+	public void testCompareToReturnsLessThanZero() {
+		assertEquals(-1, this.c11.compareTo(c12));
+		assertEquals(-1, this.c11.compareTo(c21));
+		assertEquals(-1, this.c11.compareTo(c22));
+
+		assertEquals(-1, this.c12.compareTo(c21));
+		assertEquals(-1, this.c12.compareTo(c22));
+
+		assertEquals(-1, this.c21.compareTo(c22));
+	}
+
+	@Test
+	public void testCompareToReturnsMoreThanZero() {
+		assertEquals(1, this.c12.compareTo(c11));
+
+		assertEquals(1, this.c21.compareTo(c11));
+		assertEquals(1, this.c21.compareTo(c12));
+
+		assertEquals(1, this.c22.compareTo(c11));
+		assertEquals(1, this.c22.compareTo(c12));
+		assertEquals(1, this.c22.compareTo(c21));
+
+	}
+
+	@Test
+	public void testCompareToReturnsZero() {
+		assertEquals(0, this.c11.compareTo(c11));
+		assertEquals(0, this.c12.compareTo(c12));
+		assertEquals(0, this.c21.compareTo(c21));
+		assertEquals(0, this.c22.compareTo(c22));
+
+		assertEquals(0, new Coordinate(2, 2).compareTo(c21));
+	}
 }

@@ -2,7 +2,7 @@ package com.ufmg.operationsresearch.matrix;
 
 import java.security.InvalidParameterException;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate> {
 
 	//The line value of this coordinate. Starts on 1
 	private Integer line;
@@ -76,5 +76,32 @@ public class Coordinate {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Returns -1 if the position represented by {@code this} is upwards if compared to {@code other}.
+	 * Returns 1 if the position represented by {@code this} is downwards if compared to {@code other}.
+	 * If {@code this} and {@code other} are on the same line:  
+	 * returns -1 if the position represented by {@code this} is leftwards if compared to {@code other}.
+	 * Returns 1 if the position represented by {@code this} is rightwards if compared to {@code other}.
+	 * If both {@code this} and {@code other} are on the same line and column, return 0
+	 */
+	@Override
+	public int compareTo(Coordinate other) {
+		if (this.line < other.line) {
+			return -1;
+		} else if (this.line == other.line) {
+			if (this.column < other.column) {
+				return -1;
+			} else if (this.column == other.column) {
+				return 0;
+			} else if (this.column > other.column) {
+				return 1;
+			}
+		} else if (this.line > other.line) {
+			return 1;
+		}
+
+		return 0;
 	}
 }
