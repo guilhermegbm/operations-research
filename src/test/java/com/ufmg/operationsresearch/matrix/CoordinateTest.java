@@ -155,6 +155,6 @@ public class CoordinateTest {
 		assertEquals(0, this.c21.compareTo(c21));
 		assertEquals(0, this.c22.compareTo(c22));
 
-		assertEquals(0, new Coordinate(2, 2).compareTo(c21));
+		assertEquals(0, new Coordinate(2, 1).compareTo(c21));
 	}
 }
