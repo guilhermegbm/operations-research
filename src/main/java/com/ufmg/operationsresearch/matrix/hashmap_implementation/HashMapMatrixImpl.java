@@ -1,6 +1,7 @@
 package com.ufmg.operationsresearch.matrix.hashmap_implementation;
 
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 
 import com.ufmg.operationsresearch.matrix.Coordinate;
@@ -19,13 +20,28 @@ public final class HashMapMatrixImpl implements Matrix {
 	*/
 	private HashMap<Coordinate, BigDecimal> values;
 
+	public HashMapMatrixImpl() {
+		this.lines = 0;
+		this.columns = 0;
+		this.values = new HashMap<Coordinate, BigDecimal>();
+	}
+
 	/**
 	 * Initializes the matrix with {@code lines * columns} entries with 0 value
 	 * @param lines
 	 * @param columns
 	 */
 	public HashMapMatrixImpl(Integer lines, Integer columns) {
-		//TODO
+		//TODO: Validate params
+		this.lines = lines;
+		this.columns = columns;
+		this.values = new HashMap<Coordinate, BigDecimal>();
+
+		for (int l = 1; l <= lines; l++) {
+			for (int c = 1; c <= columns; c++) {
+				this.values.put(new Coordinate(l, c), BigDecimal.ZERO);
+			}
+		}
 	}
 
 	/**
@@ -33,7 +49,35 @@ public final class HashMapMatrixImpl implements Matrix {
 	 * @param values
 	 */
 	public HashMapMatrixImpl(BigDecimal[][] values) {
+		if (values == null) {
+			throw new InvalidParameterException("values can not be null");
+		}
 
+		int numberOfLines = values.length;
+
+		if (numberOfLines == 0) {
+			this.lines = 0;
+			this.columns = 0;
+			this.values = new HashMap<Coordinate, BigDecimal>();
+
+			return;
+		}
+
+		int numberOfColumns = values[0].length;
+
+		this.lines = numberOfLines;
+		this.columns = numberOfColumns;
+		this.values = new HashMap<Coordinate, BigDecimal>();
+
+		for (int l = 1; l <= numberOfLines; l++) {
+			if (values[l - 1].length != numberOfColumns) {
+				throw new InvalidParameterException("The BigDecimal matrix passed as parameter has columns with different sizes");
+			}
+
+			for (int c = 1; c <= numberOfColumns; c++) {
+				this.values.put(new Coordinate(l, c), values[l - 1][c - 1]);
+			}
+		}
 	}
 
 	public Integer getLines() {
@@ -46,14 +90,20 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	@Override
 	public BigDecimal getValue(Coordinate coord) {
-		// TODO Auto-generated method stub
-		return null;
+		if (coord.getLine() > this.lines) {
+			throw new InvalidParameterException("Line out of bounds");
+		}
+
+		if (coord.getColumn() > this.columns) {
+			throw new InvalidParameterException("Column out of bounds");
+		}
+
+		return this.values.get(coord);
 	}
 
 	@Override
 	public BigDecimal getValue(Integer line, Integer column) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getValue(new Coordinate(line, column));
 	}
 
 	@Override
@@ -102,6 +152,52 @@ public final class HashMapMatrixImpl implements Matrix {
 	public void addMultipliedLineToTargetLine(Integer lineToBeMultiplied, BigDecimal scalar, Integer targetLine) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public boolean isEmpty() {
+		return (this.lines == 0 && this.columns == 0);
+	}
+
+	public String toString() {
+		if (this.isEmpty()) {
+			return "[]";
+		}
+
+		StringBuffer sb = new StringBuffer();
+
+		for (int l = 1; l <= this.lines; l++) {
+			/*if (l == 1) {
+				sb.append("⌈");
+			} else if (l == this.lines) {
+				sb.append("⌊");
+			} else {
+				sb.append("|");
+			}*/
+			sb.append("|");
+			for (int c = 1; c <= this.columns; c++) {
+				BigDecimal val = this.getValue(l, c);
+
+				sb.append(val.toString()).append(" ");
+
+			}
+
+			if (l == this.lines) {
+				sb.append("|");
+			} else {
+				sb.append("|\n");
+			}
+
+			//TODO: Check if there is a character better than "⌉" and "⌋"
+			/*if (l == 1) {
+				sb.append("⌉\n");
+			} else if (l == this.lines) {
+				sb.append("⌋\n");
+			} else {
+				sb.append("|");
+			}*/
+		}
+
+		return sb.toString();
 	}
 
 }

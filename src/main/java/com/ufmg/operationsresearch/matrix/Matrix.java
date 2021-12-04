@@ -21,6 +21,8 @@ public interface Matrix {
 	void concatLeft(Matrix other);
 
 	void concatDown(Matrix other);
+	
+	boolean isEmpty();
 
 	/**
 	 * Alters {@code line} to be: line = line * scalar 
