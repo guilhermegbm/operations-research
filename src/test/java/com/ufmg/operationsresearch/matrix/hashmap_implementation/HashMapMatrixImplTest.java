@@ -171,6 +171,16 @@ public class HashMapMatrixImplTest {
 	}
 
 	@Test
+	public void testConstructorWithArrayParamThrowsExceptionOnIncongruentLineVectors() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			BigDecimal bdArrayWithIncongruentLines[][] = { { BigDecimal.ONE, BigDecimal.ONE }, { BigDecimal.ONE, BigDecimal.ONE }, { BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE } };
+			new HashMapMatrixImpl(bdArrayWithIncongruentLines);
+		});
+
+		assertEquals("The matrix passed as parameter has line vectors with different sizes", e.getMessage());
+	}
+
+	@Test
 	public void testGetValueOn1x1() {
 		assertEquals(0, new BigDecimal("1").compareTo(this.m1x1.getValue(1, 1)));
 	}

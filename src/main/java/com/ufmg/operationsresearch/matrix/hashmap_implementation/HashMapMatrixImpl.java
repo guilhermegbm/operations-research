@@ -78,7 +78,7 @@ public final class HashMapMatrixImpl implements Matrix {
 
 		for (int l = 1; l <= numberOfLines; l++) {
 			if (values[l - 1].length != numberOfColumns) {
-				throw new InvalidParameterException("The BigDecimal matrix passed as parameter has columns with different sizes");
+				throw new InvalidParameterException("The matrix passed as parameter has line vectors with different sizes");
 			}
 
 			for (int c = 1; c <= numberOfColumns; c++) {
