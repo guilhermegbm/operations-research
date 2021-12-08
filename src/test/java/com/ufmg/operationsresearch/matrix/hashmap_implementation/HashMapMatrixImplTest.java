@@ -205,7 +205,16 @@ public class HashMapMatrixImplTest {
 			this.m1x1.getValue(2, 1);
 		});
 
-		assertEquals("Line out of bounds", e.getMessage());
+		assertEquals("Line 2 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	@Test
+	public void testNegativeLineGetValueRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.getValue(-3, 1);
+		});
+
+		assertEquals("Line -3 out of bounds (limits are <1, 1>)", e.getMessage());
 	}
 
 	@Test
@@ -214,7 +223,75 @@ public class HashMapMatrixImplTest {
 			this.m1x1.getValue(1, 2);
 		});
 
-		assertEquals("Column out of bounds", e.getMessage());
+		assertEquals("Column 2 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	@Test
+	public void testNegativeColumnGetValueRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.getValue(1, -2);
+		});
+
+		assertEquals("Column -2 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	@Test
+	public void testSetValueOn1x2() {
+		//Before being modified
+		String originalMatrixString = "|1 2 |";
+		assertEquals(originalMatrixString, this.m1x2.toString());
+
+		//After being modified
+		this.m1x2.setValue(1, 2, new BigDecimal("5"));
+
+		assertEquals(1, this.m1x2.getLines());
+		assertEquals(2, this.m1x2.getColumns());
+		String modifiedMatrixString = "|1 5 |";
+		assertEquals(modifiedMatrixString, this.m1x2.toString());
+
+		//After being modified again
+		this.m1x2.setValue(1, 1, new BigDecimal("9"));
+
+		assertEquals(1, this.m1x2.getLines());
+		assertEquals(2, this.m1x2.getColumns());
+		modifiedMatrixString = "|9 5 |";
+		assertEquals(modifiedMatrixString, this.m1x2.toString());
+	}
+
+	@Test
+	public void testLineOutOfBoundsSetValueRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setValue(2, 1, BigDecimal.ZERO);
+		});
+
+		assertEquals("Line 2 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	@Test
+	public void testNegativeLineSetValueRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setValue(-3, 1, BigDecimal.ZERO);
+		});
+
+		assertEquals("Line -3 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	@Test
+	public void testColumnOutOfBoundsSetValueRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setValue(1, 2, BigDecimal.ZERO);
+		});
+
+		assertEquals("Column 2 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	@Test
+	public void testNegativeColumnSetValueRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setValue(1, -2, BigDecimal.ZERO);
+		});
+
+		assertEquals("Column -2 out of bounds (limits are <1, 1>)", e.getMessage());
 	}
 
 	@Test
@@ -242,7 +319,7 @@ public class HashMapMatrixImplTest {
 			this.m2x2.multiplyLineByScalar(3, new BigDecimal("5"));
 		});
 
-		assertEquals("Line 3 out of bounds (limits are 1-2)", e.getMessage());
+		assertEquals("Line 3 out of bounds (limits are <1, 2>)", e.getMessage());
 	}
 
 	@Test
@@ -279,7 +356,7 @@ public class HashMapMatrixImplTest {
 			this.m2x2.addMultipliedLineToTargetLine(3, new BigDecimal("-2"), 1);
 		});
 
-		assertEquals("Target Line 3 out of bounds (limits are 1-2)", e.getMessage());
+		assertEquals("Target Line 3 out of bounds (limits are <1, 2>)", e.getMessage());
 	}
 
 	@Test
@@ -288,6 +365,38 @@ public class HashMapMatrixImplTest {
 			this.m2x2.addMultipliedLineToTargetLine(1, new BigDecimal("3"), 4);
 		});
 
-		assertEquals("Line to be multiplied 4 out of bounds (limits are 1-2)", e.getMessage());
+		assertEquals("Line to be multiplied 4 out of bounds (limits are <1, 2>)", e.getMessage());
+	}
+
+	@Test
+	public void testDuplicate1x2Matrix() {
+		//Duplicating 1x2
+		HashMapMatrixImpl duplicatedMatrix = (HashMapMatrixImpl) this.m1x2.duplicate();
+
+		//Checking if duplicated Matrix was correctly duplicated
+		assertEquals(this.m1x2.getLines(), duplicatedMatrix.getLines());
+		assertEquals(this.m1x2.getColumns(), duplicatedMatrix.getColumns());
+		assertEquals(this.m1x2.toString(), duplicatedMatrix.toString());
+	}
+
+	@Test
+	public void testAlterDuplicate1x2MatrixDoesNotAlterOriginalMatrix() {
+		//Duplicating 1x2
+		HashMapMatrixImpl duplicatedMatrix = (HashMapMatrixImpl) this.m1x2.duplicate();
+
+		//Modifying duplicated Matrix
+		duplicatedMatrix.setValue(1, 2, new BigDecimal("5"));
+
+		//Checking if duplicated Matrix was correctly modified
+		assertEquals(1, duplicatedMatrix.getLines());
+		assertEquals(2, duplicatedMatrix.getColumns());
+		String modifiedDuplicatedMatrixString = "|1 5 |";
+		assertEquals(modifiedDuplicatedMatrixString, duplicatedMatrix.toString());
+
+		//Checking if original 1x2 Matrix was NOT modified
+		assertEquals(1, this.m1x2.getLines());
+		assertEquals(2, this.m1x2.getColumns());
+		String originalMatrixString = "|1 2 |";
+		assertEquals(originalMatrixString, this.m1x2.toString());
 	}
 }
