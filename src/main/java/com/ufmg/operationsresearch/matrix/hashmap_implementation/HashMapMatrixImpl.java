@@ -1,7 +1,9 @@
 package com.ufmg.operationsresearch.matrix.hashmap_implementation;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.InvalidParameterException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -108,18 +110,21 @@ public final class HashMapMatrixImpl implements Matrix {
 		return columns;
 	}
 
-	private void validateLineAndColumn(Integer line, Integer column) {
-		this.validateLine(line);
-		this.validateColumn(column);
+	@Override
+	public void checkIfLineAndColumnExists(Integer line, Integer column) {
+		this.checkIfLineExists(line);
+		this.checkIfColumnExists(column);
 	}
 
-	private void validateLine(Integer line) {
+	@Override
+	public void checkIfLineExists(Integer line) {
 		if (line > this.lines || line < 1) {
 			throw new InvalidParameterException("Line " + line + " out of bounds (limits are <1, " + this.lines + ">)");
 		}
 	}
 
-	private void validateColumn(Integer column) {
+	@Override
+	public void checkIfColumnExists(Integer column) {
 		if (column > this.columns || column < 1) {
 			throw new InvalidParameterException("Column " + column + " out of bounds (limits are <1, " + this.columns + ">)");
 		}
@@ -127,14 +132,14 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	@Override
 	public BigDecimal getValue(Integer line, Integer column) {
-		this.validateLineAndColumn(line, column);
+		this.checkIfLineAndColumnExists(line, column);
 
 		return this.values.get(new Coordinate(line, column));
 	}
 
 	@Override
 	public void setValue(Integer line, Integer column, BigDecimal value) {
-		this.validateLineAndColumn(line, column);
+		this.checkIfLineAndColumnExists(line, column);
 
 		if (value == null) {
 			throw new InvalidParameterException("Value can not be null");
@@ -154,6 +159,9 @@ public final class HashMapMatrixImpl implements Matrix {
 
 		StringBuffer sb = new StringBuffer();
 
+		DecimalFormat df = new DecimalFormat("0.#######");
+		df.setRoundingMode(RoundingMode.HALF_UP);
+
 		for (int l = 1; l <= this.lines; l++) {
 			/*if (l == 1) {
 				sb.append("⌈");
@@ -166,7 +174,7 @@ public final class HashMapMatrixImpl implements Matrix {
 			for (int c = 1; c <= this.columns; c++) {
 				BigDecimal val = this.getValue(l, c);
 
-				sb.append(val.toString()).append(" ");
+				sb.append(df.format(val).replace(",", ".")).append(" ");
 
 			}
 
@@ -188,9 +196,72 @@ public final class HashMapMatrixImpl implements Matrix {
 		return sb.toString();
 	}
 
+	/*public void testBigDecimal() {
+		DecimalFormat df = new DecimalFormat("0.#######");
+		df.setRoundingMode(RoundingMode.HALF_UP);
+	
+		BigDecimal b1 = new BigDecimal("1.149026").setScale(4, RoundingMode.HALF_UP);
+		System.out.println(b1);
+		System.out.println(df.format(b1).replace(",", "."));
+	
+		BigDecimal b2 = new BigDecimal("1.0000000000").setScale(4, RoundingMode.HALF_UP);
+		System.out.println(b2);
+		System.out.println(df.format(b2).replace(",", "."));
+	
+		BigDecimal b3 = new BigDecimal("1.00").setScale(4, RoundingMode.HALF_UP);
+		System.out.println(b3);
+		System.out.println(df.format(b3).replace(",", "."));
+	
+		BigDecimal b4 = new BigDecimal("1.99999999").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b4);
+		System.out.println(df.format(b4).replace(",", "."));
+	
+		BigDecimal b5 = new BigDecimal("1.99999995").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b5);
+		System.out.println(df.format(b5).replace(",", "."));
+	
+		BigDecimal b6 = new BigDecimal("1.99999994").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b6);
+		System.out.println(df.format(b6).replace(",", "."));
+	
+		df.setRoundingMode(RoundingMode.FLOOR);
+		BigDecimal b7 = new BigDecimal("1.99999999").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b7);
+		System.out.println(df.format(b7).replace(",", "."));
+	
+		df.setRoundingMode(RoundingMode.HALF_UP);
+		BigDecimal b8 = new BigDecimal("1").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b8);
+		System.out.println(df.format(b8).replace(",", "."));
+	
+		BigDecimal b9 = new BigDecimal("2").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b9);
+		System.out.println(df.format(b9).replace(",", "."));
+	
+		BigDecimal b10 = new BigDecimal("23").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b10);
+		System.out.println(df.format(b10).replace(",", "."));
+	
+		BigDecimal b11 = new BigDecimal("-5").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b11);
+		System.out.println(df.format(b11).replace(",", "."));
+	
+		BigDecimal b12 = new BigDecimal("2.7").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b12);
+		System.out.println(df.format(b12).replace(",", "."));
+	
+		BigDecimal b13 = new BigDecimal("-0.99999999").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b13);
+		System.out.println(df.format(b13).replace(",", "."));
+	
+		BigDecimal b14 = new BigDecimal("-0.275").setScale(8, RoundingMode.HALF_UP);
+		System.out.println(b14);
+		System.out.println(df.format(b14).replace(",", "."));
+	}*/
+
 	@Override
 	public void multiplyLineByScalar(Integer line, BigDecimal scalar) {
-		this.validateLine(line);
+		this.checkIfLineExists(line);
 
 		for (int c = 1; c <= this.columns; c++) {
 			Coordinate coord = new Coordinate(line, c);

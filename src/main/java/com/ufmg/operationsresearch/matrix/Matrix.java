@@ -8,6 +8,12 @@ public interface Matrix {
 
 	Integer getColumns();
 
+	void checkIfLineAndColumnExists(Integer line, Integer column);
+
+	void checkIfLineExists(Integer line);
+
+	void checkIfColumnExists(Integer column);
+
 	BigDecimal getValue(Integer line, Integer column);
 
 	void setValue(Integer line, Integer column, BigDecimal value);
