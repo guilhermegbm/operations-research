@@ -98,4 +98,66 @@ public class ConcatMatrixTest {
 
 		assertEquals("Number of columns on m1 (2) is different from the number of columns on m2 (1)", e.getMessage());
 	}
+
+	@Test
+	public void testConcatLeft2x2With2x1() {
+		HashMapMatrixImpl concatedMatrix = (HashMapMatrixImpl) ConcatMatrix.concatLeft(m2x2, m2x1);
+
+		assertEquals(2, concatedMatrix.getLines());
+		assertEquals(3, concatedMatrix.getColumns());
+
+		String expectedMatrixString = "|1 1 2 |\n" + "|3 3 4 |";
+		assertEquals(expectedMatrixString, concatedMatrix.toString());
+	}
+
+	@Test
+	public void testConcatLeft2x3With2x2() {
+		HashMapMatrixImpl concatedMatrix = (HashMapMatrixImpl) ConcatMatrix.concatLeft(m2x3, m2x2);
+
+		assertEquals(2, concatedMatrix.getLines());
+		assertEquals(5, concatedMatrix.getColumns());
+
+		String expectedMatrixString = "|1 2 1 2 3 |\n" + "|3 4 4 5 6 |";
+		assertEquals(expectedMatrixString, concatedMatrix.toString());
+	}
+
+	@Test
+	public void testConcatLeft2x2With1x1RaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			ConcatMatrix.concatLeft(m2x2, m1x1);
+		});
+
+		assertEquals("Number of lines on m1 (1) is different from the number of lines on m2 (2)", e.getMessage());
+	}
+
+	@Test
+	public void testConcatUp2x2With1x2() {
+		HashMapMatrixImpl concatedMatrix = (HashMapMatrixImpl) ConcatMatrix.concatUp(m2x2, m1x2);
+
+		assertEquals(3, concatedMatrix.getLines());
+		assertEquals(2, concatedMatrix.getColumns());
+
+		String expectedMatrixString = "|1 2 |\n" + "|1 2 |\n" + "|3 4 |";
+		assertEquals(expectedMatrixString, concatedMatrix.toString());
+	}
+
+	@Test
+	public void testConcatUp3x2With2x2() {
+		HashMapMatrixImpl concatedMatrix = (HashMapMatrixImpl) ConcatMatrix.concatUp(m3x2, m2x2);
+
+		assertEquals(5, concatedMatrix.getLines());
+		assertEquals(2, concatedMatrix.getColumns());
+
+		String expectedMatrixString = "|1 2 |\n" + "|3 4 |\n" + "|1 2 |\n" + "|3 4 |\n" + "|5 6 |";
+		assertEquals(expectedMatrixString, concatedMatrix.toString());
+	}
+
+	@Test
+	public void testConcatUp2x2With1x1RaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			ConcatMatrix.concatUp(m2x2, m1x1);
+		});
+
+		assertEquals("Number of columns on m1 (1) is different from the number of columns on m2 (2)", e.getMessage());
+	}
 }

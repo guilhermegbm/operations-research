@@ -43,4 +43,12 @@ public class ConcatMatrix {
 
 		return newMatrix;
 	}
+
+	public static Matrix concatLeft(Matrix m2, Matrix m1) {
+		return ConcatMatrix.concatRight(m1, m2);
+	}
+
+	public static Matrix concatUp(Matrix m2, Matrix m1) {
+		return ConcatMatrix.concatDown(m1, m2);
+	}
 }
