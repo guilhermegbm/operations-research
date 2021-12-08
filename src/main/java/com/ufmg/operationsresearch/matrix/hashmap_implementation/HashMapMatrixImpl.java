@@ -3,6 +3,7 @@ package com.ufmg.operationsresearch.matrix.hashmap_implementation;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.ufmg.operationsresearch.matrix.Coordinate;
 import com.ufmg.operationsresearch.matrix.Matrix;
@@ -87,6 +88,16 @@ public final class HashMapMatrixImpl implements Matrix {
 		}
 	}
 
+	public HashMapMatrixImpl(HashMapMatrixImpl otherMatrix) {
+		this.lines = otherMatrix.lines;
+		this.columns = otherMatrix.columns;
+
+		this.values = new HashMap<Coordinate, BigDecimal>();
+		for (Entry<Coordinate, BigDecimal> entry : otherMatrix.values.entrySet()) {
+			this.values.put(entry.getKey(), entry.getValue());
+		}
+	}
+
 	@Override
 	public Integer getLines() {
 		return lines;
@@ -97,23 +108,39 @@ public final class HashMapMatrixImpl implements Matrix {
 		return columns;
 	}
 
+	private void validateLineAndColumn(Integer line, Integer column) {
+		this.validateLine(line);
+		this.validateColumn(column);
+	}
+
+	private void validateLine(Integer line) {
+		if (line > this.lines || line < 1) {
+			throw new InvalidParameterException("Line " + line + " out of bounds (limits are <1, " + this.lines + ">)");
+		}
+	}
+
+	private void validateColumn(Integer column) {
+		if (column > this.columns || column < 1) {
+			throw new InvalidParameterException("Column " + column + " out of bounds (limits are <1, " + this.columns + ">)");
+		}
+	}
+
 	@Override
 	public BigDecimal getValue(Integer line, Integer column) {
-		if (line > this.lines) {
-			throw new InvalidParameterException("Line out of bounds");
-		}
-
-		if (column > this.columns) {
-			throw new InvalidParameterException("Column out of bounds");
-		}
+		this.validateLineAndColumn(line, column);
 
 		return this.values.get(new Coordinate(line, column));
 	}
 
 	@Override
 	public void setValue(Integer line, Integer column, BigDecimal value) {
-		// TODO Auto-generated method stub
+		this.validateLineAndColumn(line, column);
 
+		if (value == null) {
+			throw new InvalidParameterException("Value can not be null");
+		}
+
+		this.values.put(new Coordinate(line, column), value);
 	}
 
 	public boolean isEmpty() {
@@ -149,7 +176,6 @@ public final class HashMapMatrixImpl implements Matrix {
 				sb.append("|\n");
 			}
 
-			//TODO: Check if there is a character better than "⌉" and "⌋"
 			/*if (l == 1) {
 				sb.append("⌉\n");
 			} else if (l == this.lines) {
@@ -164,9 +190,7 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	@Override
 	public void multiplyLineByScalar(Integer line, BigDecimal scalar) {
-		if (line > this.lines || line < 1) {
-			throw new InvalidParameterException("Line " + line + " out of bounds (limits are 1-" + this.lines + ")");
-		}
+		this.validateLine(line);
 
 		for (int c = 1; c <= this.columns; c++) {
 			Coordinate coord = new Coordinate(line, c);
@@ -176,12 +200,14 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	@Override
 	public void addMultipliedLineToTargetLine(Integer targetLine, BigDecimal scalar, Integer lineToBeMultiplied) {
+		//TODO: Use "this.validateLineAndColumn(line, column);"?
+
 		if (targetLine > this.lines || targetLine < 1) {
-			throw new InvalidParameterException("Target Line " + targetLine + " out of bounds (limits are 1-" + this.lines + ")");
+			throw new InvalidParameterException("Target Line " + targetLine + " out of bounds (limits are <1, " + this.lines + ">)");
 		}
 
 		if (lineToBeMultiplied > this.lines || lineToBeMultiplied < 1) {
-			throw new InvalidParameterException("Line to be multiplied " + lineToBeMultiplied + " out of bounds (limits are 1-" + this.lines + ")");
+			throw new InvalidParameterException("Line to be multiplied " + lineToBeMultiplied + " out of bounds (limits are <1, " + this.lines + ">)");
 		}
 
 		for (int c = 1; c <= this.columns; c++) {
@@ -198,4 +224,34 @@ public final class HashMapMatrixImpl implements Matrix {
 		}
 	}
 
+	@Override
+	public Matrix duplicate() {
+		Matrix newMatrix = new HashMapMatrixImpl(this);
+		return newMatrix;
+	}
+
+	@Override
+	public void setNumberOfLines(Integer newNumberOfLines) {
+		if (lines < 1) {
+			throw new InvalidParameterException("Number of lines (" + newNumberOfLines + ") must be greater than or equal to 1");
+		}
+		this.lines = newNumberOfLines;
+	}
+
+	@Override
+	public void setNumberOfColumns(Integer newNumberOfColumns) {
+		if (columns < 1) {
+			throw new InvalidParameterException("Number of columns (" + newNumberOfColumns + ") must be greater than or equal to 1");
+		}
+		this.columns = newNumberOfColumns;
+	}
+
+	public void printInfo() {
+		System.out.println("Number of lines: " + this.getLines());
+		System.out.println("Number of columns: " + this.getColumns());
+
+		for (Entry<Coordinate, BigDecimal> entry : this.values.entrySet()) {
+			System.out.println("[" + entry.getKey().getLine() + ", " + entry.getKey().getColumn() + "] = " + entry.getValue());
+		}
+	}
 }

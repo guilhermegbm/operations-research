@@ -14,15 +14,6 @@ public interface Matrix {
 
 	String toString();
 
-	//TODO: Send these methods to specific file
-	//void concatRight(Matrix other);
-
-	//void concatUp(Matrix other);
-
-	//void concatLeft(Matrix other);
-
-	//void concatDown(Matrix other);
-
 	boolean isEmpty();
 
 	/**
@@ -36,4 +27,9 @@ public interface Matrix {
 	 */
 	void addMultipliedLineToTargetLine(Integer targetLine, BigDecimal scalar, Integer lineToBeMultiplied);
 
+	Matrix duplicate();
+
+	void setNumberOfLines(Integer newNumberOfLines);
+
+	void setNumberOfColumns(Integer newNumberOfColumns);
 }
