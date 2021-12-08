@@ -32,7 +32,14 @@ public final class HashMapMatrixImpl implements Matrix {
 	 * @param columns
 	 */
 	public HashMapMatrixImpl(Integer lines, Integer columns) {
-		//TODO: Validate params
+		if (lines < 1) {
+			throw new InvalidParameterException("Number of lines (" + lines + ") must be greater than or equal to 1");
+		}
+
+		if (columns < 1) {
+			throw new InvalidParameterException("Number of columns (" + columns + ") must be greater than or equal to 1");
+		}
+
 		this.lines = lines;
 		this.columns = columns;
 		this.values = new HashMap<Coordinate, BigDecimal>();
@@ -80,36 +87,27 @@ public final class HashMapMatrixImpl implements Matrix {
 		}
 	}
 
+	@Override
 	public Integer getLines() {
 		return lines;
 	}
 
+	@Override
 	public Integer getColumns() {
 		return columns;
 	}
 
 	@Override
-	public BigDecimal getValue(Coordinate coord) {
-		if (coord.getLine() > this.lines) {
+	public BigDecimal getValue(Integer line, Integer column) {
+		if (line > this.lines) {
 			throw new InvalidParameterException("Line out of bounds");
 		}
 
-		if (coord.getColumn() > this.columns) {
+		if (column > this.columns) {
 			throw new InvalidParameterException("Column out of bounds");
 		}
 
-		return this.values.get(coord);
-	}
-
-	@Override
-	public BigDecimal getValue(Integer line, Integer column) {
-		return this.getValue(new Coordinate(line, column));
-	}
-
-	@Override
-	public void setValue(Coordinate coord, BigDecimal value) {
-		// TODO Auto-generated method stub
-
+		return this.values.get(new Coordinate(line, column));
 	}
 
 	@Override

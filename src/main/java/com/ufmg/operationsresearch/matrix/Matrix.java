@@ -3,12 +3,12 @@ package com.ufmg.operationsresearch.matrix;
 import java.math.BigDecimal;
 
 public interface Matrix {
-
-	BigDecimal getValue(Coordinate coord);
+	
+	Integer getLines();
+	
+	Integer getColumns();
 
 	BigDecimal getValue(Integer line, Integer column);
-
-	void setValue(Coordinate coord, BigDecimal value);
 
 	void setValue(Integer line, Integer column, BigDecimal value);
 

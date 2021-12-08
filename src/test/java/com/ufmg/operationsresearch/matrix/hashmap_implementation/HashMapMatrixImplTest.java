@@ -10,13 +10,10 @@ import java.security.InvalidParameterException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.ufmg.operationsresearch.matrix.Coordinate;
-
 public class HashMapMatrixImplTest {
 
 	private HashMapMatrixImpl mEmpty;
 	private HashMapMatrixImpl mOtherEmpty;
-	private HashMapMatrixImpl mAnotherEmpty;
 	private HashMapMatrixImpl m4x4Zeroes;
 	private HashMapMatrixImpl mOther4x4Zeroes;
 	private HashMapMatrixImpl m4x4Ones;
@@ -29,10 +26,9 @@ public class HashMapMatrixImplTest {
 	public void init() {
 
 		this.mEmpty = new HashMapMatrixImpl();
-		this.mOtherEmpty = new HashMapMatrixImpl(0, 0);
 
 		BigDecimal bdArrayOtherEmpty[][] = {};//Zero lines
-		this.mAnotherEmpty = new HashMapMatrixImpl(bdArrayOtherEmpty);
+		this.mOtherEmpty = new HashMapMatrixImpl(bdArrayOtherEmpty);
 
 		this.m4x4Zeroes = new HashMapMatrixImpl(4, 4);
 
@@ -68,7 +64,34 @@ public class HashMapMatrixImplTest {
 	}
 
 	@Test
-	public void testConstructorWithLinesAndColumnsGeneratedOtherEmptyMatrix() {
+	public void testConstructorWithLinesAndColumnsThrowsInvalidParameterOnZeroLinesAndColumns() {
+		Exception eLineZero = assertThrows(InvalidParameterException.class, () -> {
+			new HashMapMatrixImpl(0, 1);
+		});
+		assertEquals("Number of lines (0) must be greater than or equal to 1", eLineZero.getMessage());
+
+		Exception eColumnZero = assertThrows(InvalidParameterException.class, () -> {
+			new HashMapMatrixImpl(1, 0);
+		});
+		assertEquals("Number of columns (0) must be greater than or equal to 1", eColumnZero.getMessage());
+	}
+
+	@Test
+	public void testConstructorWithLinesAndColumnsThrowsInvalidParameterOnNegativeLinesAndColumns() {
+		Exception eLineNegative = assertThrows(InvalidParameterException.class, () -> {
+			new HashMapMatrixImpl(-1, 2);
+		});
+		assertEquals("Number of lines (-1) must be greater than or equal to 1", eLineNegative.getMessage());
+
+		Exception eColumnNegative = assertThrows(InvalidParameterException.class, () -> {
+			new HashMapMatrixImpl(2, -2);
+		});
+
+		assertEquals("Number of columns (-2) must be greater than or equal to 1", eColumnNegative.getMessage());
+	}
+
+	@Test
+	public void testConstructorWithArrayParamGeneratedOtherEmptyMatrix() {
 		assertEquals(0, this.mOtherEmpty.getLines());
 		assertEquals(0, this.mOtherEmpty.getColumns());
 
@@ -78,37 +101,23 @@ public class HashMapMatrixImplTest {
 	}
 
 	@Test
-	public void testConstructorWithArrayParamGeneratedAnotherEmptyMatrix() {
-		assertEquals(0, this.mAnotherEmpty.getLines());
-		assertEquals(0, this.mAnotherEmpty.getColumns());
-
-		String expectedMatrixString = "[]";
-
-		assertEquals(expectedMatrixString, this.mAnotherEmpty.toString());
-	}
-
-	@Test
 	public void testConstructorWithLinesAndColumnsGenerated4x4ZeroesMatrix() {
 		assertEquals(4, this.m4x4Zeroes.getLines());
 		assertEquals(4, this.m4x4Zeroes.getColumns());
 
-		//System.out.println(this.m4x4Zeroes.toString());
+		String expectedMatrixString = "|0 0 0 0 |\n" + "|0 0 0 0 |\n" + "|0 0 0 0 |\n" + "|0 0 0 0 |";
 
-		String expectedMatrixString = "|0 0 0 0 |\r\n" + "|0 0 0 0 |\r\n" + "|0 0 0 0 |\r\n" + "|0 0 0 0 |";
-
-		//assertTrue(expectedMatrixString.equals(this.m4x4Zeroes.toString()));
+		assertEquals(expectedMatrixString, this.m4x4Zeroes.toString());
 	}
 
 	@Test
-	public void testConstructorWithArrayParamGenerated4x4ZeroesMatrix() {
+	public void testConstructorWithArrayParamGeneratedOther4x4ZeroesMatrix() {
 		assertEquals(4, this.mOther4x4Zeroes.getLines());
 		assertEquals(4, this.mOther4x4Zeroes.getColumns());
 
-		//System.out.println(this.mOther4x4Zeroes.toString());
+		String expectedMatrixString = "|0 0 0 0 |\n" + "|0 0 0 0 |\n" + "|0 0 0 0 |\n" + "|0 0 0 0 |";
 
-		String expectedMatrixString = "|0 0 0 0 |\r\n" + "|0 0 0 0 |\r\n" + "|0 0 0 0 |\r\n" + "|0 0 0 0 |";
-
-		//assertTrue(expectedMatrixString.equals(this.mOther4x4Zeroes.toString()));
+		assertEquals(expectedMatrixString, this.mOther4x4Zeroes.toString());
 	}
 
 	@Test
@@ -116,11 +125,9 @@ public class HashMapMatrixImplTest {
 		assertEquals(4, this.m4x4Ones.getLines());
 		assertEquals(4, this.m4x4Ones.getColumns());
 
-		//System.out.println(this.m4x4Ones.toString());
+		String expectedMatrixString = "|1 1 1 1 |\n" + "|1 1 1 1 |\n" + "|1 1 1 1 |\n" + "|1 1 1 1 |";
 
-		String expectedMatrixString = "|1 1 1 1 |\r\n" + "|1 1 1 1 |\r\n" + "|1 1 1 1 |\r\n" + "|1 1 1 1 |";
-
-		//assertTrue(expectedMatrixString.equals(this.m4x4Ones.toString()));
+		assertEquals(expectedMatrixString, this.m4x4Ones.toString());
 	}
 
 	@Test
@@ -128,11 +135,9 @@ public class HashMapMatrixImplTest {
 		assertEquals(1, this.m1x1.getLines());
 		assertEquals(1, this.m1x1.getColumns());
 
-		//System.out.println(this.m1x1.toString());
-
 		String expectedMatrixString = "|1 |";
 
-		assertTrue(expectedMatrixString.equals(this.m1x1.toString()));
+		assertEquals(expectedMatrixString, this.m1x1.toString());
 	}
 
 	@Test
@@ -140,11 +145,9 @@ public class HashMapMatrixImplTest {
 		assertEquals(1, this.m1x2.getLines());
 		assertEquals(2, this.m1x2.getColumns());
 
-		//System.out.println(this.m1x2.toString());
+		String expectedMatrixString = "|1 2 |";
 
-		String expectedMatrixString = "|1 |";
-
-		//assertTrue(expectedMatrixString.equals(this.m1x2.toString()));
+		assertEquals(expectedMatrixString, this.m1x2.toString());
 	}
 
 	@Test
@@ -152,11 +155,9 @@ public class HashMapMatrixImplTest {
 		assertEquals(2, this.m2x1.getLines());
 		assertEquals(1, this.m2x1.getColumns());
 
-		//System.out.println(this.m2x1.toString());
+		String expectedMatrixString = "|1 |\n" + "|3 |";
 
-		String expectedMatrixString = "|1 |";
-
-		//assertTrue(expectedMatrixString.equals(this.m2x1.toString()));
+		assertEquals(expectedMatrixString, this.m2x1.toString());
 	}
 
 	@Test
@@ -164,11 +165,9 @@ public class HashMapMatrixImplTest {
 		assertEquals(2, this.m2x2.getLines());
 		assertEquals(2, this.m2x2.getColumns());
 
-		//System.out.println(this.m2x2.toString());
+		String expectedMatrixString = "|1 2 |\n" + "|3 4 |";
 
-		String expectedMatrixString = "|1 2 |\r\n" + "|3 4 |";
-
-		//assertTrue(expectedMatrixString.equals(this.m2x2.toString()));
+		assertEquals(expectedMatrixString, this.m2x2.toString());
 	}
 
 	@Test
