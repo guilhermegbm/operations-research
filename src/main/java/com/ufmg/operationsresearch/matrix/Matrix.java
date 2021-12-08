@@ -27,6 +27,10 @@ public interface Matrix {
 	 */
 	void addMultipliedLineToTargetLine(Integer targetLine, BigDecimal scalar, Integer lineToBeMultiplied);
 
+	/**
+	 * Returns a new Matrix instance {@code other} with the same lines, columns and values of {@code this}.
+	 * Altering and manipulating the values of one should NOT alter the volues of the other
+	 */
 	Matrix duplicate();
 
 	void setNumberOfLines(Integer newNumberOfLines);
