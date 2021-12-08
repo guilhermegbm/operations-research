@@ -3,9 +3,9 @@ package com.ufmg.operationsresearch.matrix;
 import java.math.BigDecimal;
 
 public interface Matrix {
-	
+
 	Integer getLines();
-	
+
 	Integer getColumns();
 
 	BigDecimal getValue(Integer line, Integer column);
@@ -14,14 +14,15 @@ public interface Matrix {
 
 	String toString();
 
-	void concatRight(Matrix other);
+	//TODO: Send these methods to specific file
+	//void concatRight(Matrix other);
 
-	void concatUp(Matrix other);
+	//void concatUp(Matrix other);
 
-	void concatLeft(Matrix other);
+	//void concatLeft(Matrix other);
 
-	void concatDown(Matrix other);
-	
+	//void concatDown(Matrix other);
+
 	boolean isEmpty();
 
 	/**
@@ -33,6 +34,6 @@ public interface Matrix {
 	 * Alters {@code targetLine} to be: targetLine = targetLine + (scalar * lineToBeMultiplied).
 	 * This method does not alter {@code lineToBeMultiplied}
 	 */
-	void addMultipliedLineToTargetLine(Integer lineToBeMultiplied, BigDecimal scalar, Integer targetLine);
+	void addMultipliedLineToTargetLine(Integer targetLine, BigDecimal scalar, Integer lineToBeMultiplied);
 
 }

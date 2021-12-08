@@ -116,42 +116,6 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	}
 
-	@Override
-	public void concatRight(Matrix other) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void concatUp(Matrix other) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void concatLeft(Matrix other) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void concatDown(Matrix other) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void multiplyLineByScalar(Integer line, BigDecimal scalar) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addMultipliedLineToTargetLine(Integer lineToBeMultiplied, BigDecimal scalar, Integer targetLine) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public boolean isEmpty() {
 		return (this.lines == 0 && this.columns == 0);
 	}
@@ -196,6 +160,42 @@ public final class HashMapMatrixImpl implements Matrix {
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public void multiplyLineByScalar(Integer line, BigDecimal scalar) {
+		if (line > this.lines || line < 1) {
+			throw new InvalidParameterException("Line " + line + " out of bounds (limits are 1-" + this.lines + ")");
+		}
+
+		for (int c = 1; c <= this.columns; c++) {
+			Coordinate coord = new Coordinate(line, c);
+			this.values.put(coord, this.values.get(coord).multiply(scalar));
+		}
+	}
+
+	@Override
+	public void addMultipliedLineToTargetLine(Integer targetLine, BigDecimal scalar, Integer lineToBeMultiplied) {
+		if (targetLine > this.lines || targetLine < 1) {
+			throw new InvalidParameterException("Target Line " + targetLine + " out of bounds (limits are 1-" + this.lines + ")");
+		}
+
+		if (lineToBeMultiplied > this.lines || lineToBeMultiplied < 1) {
+			throw new InvalidParameterException("Line to be multiplied " + lineToBeMultiplied + " out of bounds (limits are 1-" + this.lines + ")");
+		}
+
+		for (int c = 1; c <= this.columns; c++) {
+			Coordinate targetCoord = new Coordinate(targetLine, c);
+			Coordinate originCoord = new Coordinate(lineToBeMultiplied, c);
+
+			BigDecimal valueToBeMultiplied = this.values.get(originCoord);
+			BigDecimal multipliedValue = valueToBeMultiplied.multiply(scalar);
+
+			BigDecimal originalTargetValue = this.values.get(targetCoord);
+			BigDecimal addedTargetValue = originalTargetValue.add(multipliedValue);
+
+			this.values.put(targetCoord, addedTargetValue);
+		}
 	}
 
 }

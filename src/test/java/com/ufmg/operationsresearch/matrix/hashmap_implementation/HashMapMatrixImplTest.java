@@ -2,7 +2,6 @@ package com.ufmg.operationsresearch.matrix.hashmap_implementation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
@@ -216,5 +215,79 @@ public class HashMapMatrixImplTest {
 		});
 
 		assertEquals("Column out of bounds", e.getMessage());
+	}
+
+	@Test
+	public void testMultiplyLineByScalar() {
+		this.m1x1.multiplyLineByScalar(1, new BigDecimal("1"));
+		String expectedMatrixString1x1 = "|1 |";
+		assertEquals(expectedMatrixString1x1, this.m1x1.toString());
+
+		this.m1x2.multiplyLineByScalar(1, new BigDecimal("2"));
+		String expectedMatrixString1x2 = "|2 4 |";
+		assertEquals(expectedMatrixString1x2, this.m1x2.toString());
+
+		this.m2x1.multiplyLineByScalar(2, new BigDecimal("3"));
+		String expectedMatrixString2x1 = "|1 |\n" + "|9 |";
+		assertEquals(expectedMatrixString2x1, this.m2x1.toString());
+
+		this.m2x2.multiplyLineByScalar(2, new BigDecimal("4"));
+		String expectedMatrixString2x2 = "|1 2 |\n" + "|12 16 |";
+		assertEquals(expectedMatrixString2x2, this.m2x2.toString());
+	}
+
+	@Test
+	public void testMultiplyLineByScalarThrowsLineOutOfBounds() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m2x2.multiplyLineByScalar(3, new BigDecimal("5"));
+		});
+
+		assertEquals("Line 3 out of bounds (limits are 1-2)", e.getMessage());
+	}
+
+	@Test
+	public void testAddMultipliedLineToTargetLineOn1x1() {
+		this.m1x1.addMultipliedLineToTargetLine(1, new BigDecimal("5"), 1); //L1 = L1 + 5*L1
+		String expectedMatrixString1x1 = "|6 |";
+		assertEquals(expectedMatrixString1x1, this.m1x1.toString());
+	}
+
+	@Test
+	public void testAddMultipliedLineToTargetLineOn1x2() {
+		this.m1x2.addMultipliedLineToTargetLine(1, new BigDecimal("3"), 1); //L1 = L1 + 3*L1 
+		String expectedMatrixString1x2 = "|4 8 |";
+		assertEquals(expectedMatrixString1x2, this.m1x2.toString());
+	}
+
+	@Test
+	public void testAddMultipliedLineToTargetLineOn2x1() {
+		this.m2x1.addMultipliedLineToTargetLine(2, new BigDecimal("-0.5"), 1); //L2 = L2 + (-0.5)*L1
+		String expectedMatrixString2x1 = "|1 |\n" + "|2.5 |";
+		assertEquals(expectedMatrixString2x1, this.m2x1.toString());
+	}
+
+	@Test
+	public void testAddMultipliedLineToTargetLineOn2x2() {
+		this.m2x2.addMultipliedLineToTargetLine(2, new BigDecimal("-4"), 1); //L2 = L2 + (-4)*L1
+		String expectedMatrixString2x2 = "|1 2 |\n" + "|-1 -4 |";
+		assertEquals(expectedMatrixString2x2, this.m2x2.toString());
+	}
+
+	@Test
+	public void testAddMultipliedLineToTargetLineThrowsTargetLineOutOfBounds() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m2x2.addMultipliedLineToTargetLine(3, new BigDecimal("-2"), 1);
+		});
+
+		assertEquals("Target Line 3 out of bounds (limits are 1-2)", e.getMessage());
+	}
+
+	@Test
+	public void testAddMultipliedLineToTargetLineThrowsLineToBeMultipliedOutOfBounds() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m2x2.addMultipliedLineToTargetLine(1, new BigDecimal("3"), 4);
+		});
+
+		assertEquals("Line to be multiplied 4 out of bounds (limits are 1-2)", e.getMessage());
 	}
 }
