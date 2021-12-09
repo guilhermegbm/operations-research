@@ -1,5 +1,5 @@
 #Workflow name
-name: CI/CD Pipeline
+name: Integration Tests Pipeline
 on:
   #Manually trigger workflow runs
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
 jobs:
   #Test's job
   tests:
-    name: Unit tests
+    name: Integration tests
     #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
     #Job's steps
@@ -30,6 +30,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      #Run Unit Tests
-      - name: Run Unit Tests
-        run: mvn -B -Dtest=*Test test
+      #Run Integration Tests
+      - name: Run Integration Tests
+        #Will run any test inside the "integration" package or in any subpackage and whose name finishes with "*Integration"
+        run: mvn -Dtest=integration.**.*Integration test
