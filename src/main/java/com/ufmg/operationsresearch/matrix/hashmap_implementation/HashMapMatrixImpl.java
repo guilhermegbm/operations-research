@@ -159,9 +159,6 @@ public final class HashMapMatrixImpl implements Matrix {
 
 		StringBuffer sb = new StringBuffer();
 
-		DecimalFormat df = new DecimalFormat("0.#######");
-		df.setRoundingMode(RoundingMode.HALF_UP);
-
 		for (int l = 1; l <= this.lines; l++) {
 			/*if (l == 1) {
 				sb.append("⌈");
@@ -172,10 +169,7 @@ public final class HashMapMatrixImpl implements Matrix {
 			}*/
 			sb.append("|");
 			for (int c = 1; c <= this.columns; c++) {
-				BigDecimal val = this.getValue(l, c);
-
-				sb.append(df.format(val).replace(",", ".")).append(" ");
-
+				sb.append(this.treatBigDecimalForPrint(this.getValue(l, c))).append(" ");
 			}
 
 			if (l == this.lines) {
@@ -194,6 +188,19 @@ public final class HashMapMatrixImpl implements Matrix {
 		}
 
 		return sb.toString();
+	}
+
+	private String treatBigDecimalForPrint(BigDecimal val) {
+		//TODO improve efficiency URGENTLY
+		DecimalFormat df = new DecimalFormat("0.#######");
+		df.setRoundingMode(RoundingMode.HALF_UP);
+
+		String bdAsStr = df.format(val);
+		bdAsStr = bdAsStr.replace(",", ".");
+		if ("-0".equals(bdAsStr)) {
+			bdAsStr = "0";
+		}
+		return bdAsStr;
 	}
 
 	/*public void testBigDecimal() {
