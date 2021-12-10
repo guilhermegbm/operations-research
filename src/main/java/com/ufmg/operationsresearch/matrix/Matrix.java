@@ -42,4 +42,10 @@ public interface Matrix {
 	void setNumberOfLines(Integer newNumberOfLines);
 
 	void setNumberOfColumns(Integer newNumberOfColumns);
+
+	//Matrix subMatrix(Integer startL, Integer endL, Integer startC, Integer endlC);
+
+	//Matrix subMatrixLine(Integer line);
+
+	//Matrix subMatrixColumn(Integer column);
 }
