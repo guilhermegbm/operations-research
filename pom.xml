@@ -16,6 +16,7 @@
 	<description>Practical implementations for Operations Research algorithims</description>
 	<properties>
 		<java.version>11</java.version>
+		<build-plugin.jacoco.version>0.8.7</build-plugin.jacoco.version>
 	</properties>
 
 	<profiles>
