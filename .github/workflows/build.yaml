@@ -62,4 +62,4 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       #Build the project
       - name: Build project
-        run: mvn -B install --no-transfer-progress --file pom.xml
+        run: mvn -B install -DskipTests --no-transfer-progress --file pom.xml
