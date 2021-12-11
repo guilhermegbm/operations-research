@@ -60,6 +60,27 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      #Build the project
+      #Build the project. Note that we use the option -DskipTests to skip the tests because the unit and integration tests have already been run before
       - name: Build project
         run: mvn -B install -DskipTests --no-transfer-progress --file pom.xml
+
+  coverage:
+    name: Coverage
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v1
+      #Set up JDK 11
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          
+      - name: Compute Code Coverage
+        run: mvn -B verify -P coverage --no-transfer-progress
+
+      - uses: codecov/codecov-action@v1
+        with:
+          file: ./**/target/site/jacoco/jacoco.xml
+          name: codecov
