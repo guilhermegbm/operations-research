@@ -40,6 +40,7 @@ jobs:
 
   build:
     name: Segunda passagem pelos testes
+    needs: run-tests
     #Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
     #Job's steps
