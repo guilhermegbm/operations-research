@@ -149,7 +149,7 @@ public final class HashMapMatrixImpl implements Matrix {
 	}
 
 	public boolean isEmpty() {
-		return (this.lines == 0 && this.columns == 0);
+		return (this.lines == 0 || this.columns == 0);
 	}
 
 	public String toString() {
@@ -310,7 +310,7 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	@Override
 	public void setNumberOfLines(Integer newNumberOfLines) {
-		if (lines < 1) {
+		if (newNumberOfLines < 1) {
 			throw new InvalidParameterException("Number of lines (" + newNumberOfLines + ") must be greater than or equal to 1");
 		}
 		this.lines = newNumberOfLines;
@@ -318,18 +318,18 @@ public final class HashMapMatrixImpl implements Matrix {
 
 	@Override
 	public void setNumberOfColumns(Integer newNumberOfColumns) {
-		if (columns < 1) {
+		if (newNumberOfColumns < 1) {
 			throw new InvalidParameterException("Number of columns (" + newNumberOfColumns + ") must be greater than or equal to 1");
 		}
 		this.columns = newNumberOfColumns;
 	}
 
-	public void printInfo() {
+	/*public void printInfo() {
 		System.out.println("Number of lines: " + this.getLines());
 		System.out.println("Number of columns: " + this.getColumns());
-
+	
 		for (Entry<Coordinate, BigDecimal> entry : this.values.entrySet()) {
 			System.out.println("[" + entry.getKey().getLine() + ", " + entry.getKey().getColumn() + "] = " + entry.getValue());
 		}
-	}
+	}*/
 }

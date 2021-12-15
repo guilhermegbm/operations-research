@@ -2,6 +2,7 @@ package com.ufmg.operationsresearch.matrix.hashmap_implementation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
@@ -180,6 +181,17 @@ public class HashMapMatrixImplTest {
 	}
 
 	@Test
+	public void testConstructorWithArrayParamThrowsInvalidParameterOnNullArray() {
+		Exception eNullArray = assertThrows(InvalidParameterException.class, () -> {
+			BigDecimal nullArr[][] = null;
+
+			new HashMapMatrixImpl(nullArr);
+		});
+
+		assertEquals("values can not be null", eNullArray.getMessage());
+	}
+
+	@Test
 	public void testGetValueOn1x1() {
 		assertEquals(0, new BigDecimal("1").compareTo(this.m1x1.getValue(1, 1)));
 	}
@@ -259,6 +271,15 @@ public class HashMapMatrixImplTest {
 	}
 
 	@Test
+	public void testSetNullValueRaisesInvalidParameterException() {
+		Exception eNullValue = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setValue(1, 1, null);
+		});
+
+		assertEquals("Value can not be null", eNullValue.getMessage());
+	}
+
+	@Test
 	public void testLineOutOfBoundsSetValueRaisesException() {
 		Exception e = assertThrows(InvalidParameterException.class, () -> {
 			this.m1x1.setValue(2, 1, BigDecimal.ZERO);
@@ -292,6 +313,20 @@ public class HashMapMatrixImplTest {
 		});
 
 		assertEquals("Column -2 out of bounds (limits are <1, 1>)", e.getMessage());
+	}
+
+	public void testIsEmptyReturnsTrueOnZeroLines() {
+		assertTrue(this.mOtherEmpty.isEmpty());
+
+	}
+
+	public void testIsEmptyReturnsTrueOnZeroColumns() {
+		BigDecimal bdArrayOtherEmpty[][] = {};//Zero lines
+		HashMapMatrixImpl mat = new HashMapMatrixImpl(bdArrayOtherEmpty);
+		mat.setNumberOfLines(1);
+
+		assertTrue(this.mOtherEmpty.isEmpty());
+
 	}
 
 	@Test
@@ -398,5 +433,41 @@ public class HashMapMatrixImplTest {
 		assertEquals(2, this.m1x2.getColumns());
 		String originalMatrixString = "|1 2 |";
 		assertEquals(originalMatrixString, this.m1x2.toString());
+	}
+
+	@Test
+	public void testSetNumberOfLines() {
+		assertEquals(1, this.m1x1.getLines());
+
+		this.m1x1.setNumberOfLines(5);
+
+		assertEquals(5, this.m1x1.getLines());
+	}
+
+	@Test
+	public void testSetNegativeNumberOfLinesRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setNumberOfLines(-3);
+		});
+
+		assertEquals("Number of lines (-3) must be greater than or equal to 1", e.getMessage());
+	}
+
+	@Test
+	public void testSetNumberOfColumns() {
+		assertEquals(1, this.m1x1.getColumns());
+
+		this.m1x1.setNumberOfColumns(4);
+
+		assertEquals(4, this.m1x1.getColumns());
+	}
+
+	@Test
+	public void testSetNegativeNumberOfColumnsRaisesException() {
+		Exception e = assertThrows(InvalidParameterException.class, () -> {
+			this.m1x1.setNumberOfColumns(-2);
+		});
+
+		assertEquals("Number of columns (-2) must be greater than or equal to 1", e.getMessage());
 	}
 }
