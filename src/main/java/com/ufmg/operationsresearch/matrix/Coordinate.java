@@ -63,15 +63,13 @@ public class Coordinate implements Comparable<Coordinate> {
 		}
 
 		Coordinate other = (Coordinate) obj;
-		if (column == null && other.column != null) {
-			return false;
-		} else if (column != other.column) {
+		//if (column == null && other.column != null) { Its impossible to build a coordinate with null column
+		if (column != other.column) {
 			return false;
 		}
 
-		if (line == null && other.line != null) {
-			return false;
-		} else if (line != other.line) {
+		//if (line == null && other.line != null) { Its impossible to build a coordinate with null line
+		if (line != other.line) {
 			return false;
 		}
 
@@ -95,13 +93,11 @@ public class Coordinate implements Comparable<Coordinate> {
 				return -1;
 			} else if (this.column == other.column) {
 				return 0;
-			} else if (this.column > other.column) {
+			} else { //this.column > other.column
 				return 1;
 			}
-		} else if (this.line > other.line) {
+		} else { //this.line > other.line
 			return 1;
 		}
-
-		return 0;
 	}
 }
