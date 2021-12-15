@@ -11,7 +11,6 @@ public class OperationsResearchApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OperationsResearchApplication.class, args);
-		System.out.println("Passou!!!!");
 	}
 
 }
